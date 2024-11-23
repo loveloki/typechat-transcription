@@ -1,6 +1,7 @@
 import CONSTANCE from "@/helper/constants"
 
 import "./globals.css"
+
 import type { Metadata } from "next"
 
 const { title, description } = CONSTANCE.homepage
@@ -15,8 +16,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const theme = "light"
+
   return (
-    <html lang={CONSTANCE.site.lang}>
+    <html lang={CONSTANCE.site.lang} className={theme}>
       <body>{children}</body>
     </html>
   )
