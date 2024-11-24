@@ -1,14 +1,14 @@
+import type { Metadata } from "next"
+
 import CONSTANCE from "@/helper/constants"
 
 import "./globals.css"
 
-import type { Metadata } from "next"
-
-const { title, description } = CONSTANCE.homepage
+const { description, title } = CONSTANCE.homepage
 
 export const metadata: Metadata = {
-  title,
   description,
+  title,
 }
 
 export default function RootLayout({
@@ -19,7 +19,7 @@ export default function RootLayout({
   const theme = "light"
 
   return (
-    <html lang={CONSTANCE.site.lang} className={theme}>
+    <html className={theme} lang={CONSTANCE.site.lang}>
       <body>{children}</body>
     </html>
   )
