@@ -1,0 +1,50 @@
+/* from https://m3.material.io/styles/typography/type-scale-tokens#c085f7c7-e125-4637-8b27-c42833b42677 */
+:root {
+  --font-size-1: 10px;
+  --font-size-2: 11px;
+  --font-size-3: 12px;
+  --font-size-4: 14px;
+  --font-size-5: 16px;
+  --font-size-6: 18px;
+  --font-size-7: 20px;
+  --font-size-8: 22px;
+  --font-size-9: 25px;
+  --font-size-10: 28px;
+  --font-size-11: 32px;
+  --font-size-12: 36px;
+  --font-size-13: 40px;
+  --font-size-14: 45px;
+  --font-size-15: 51px;
+  --font-size-16: 57px;
+  --font-size-17: 64px;
+  --font-size-18: 72px;
+  --font-size-19: 81px;
+  --font-size-20: 91px;
+  --font-size-21: 103px;
+}
+
+/* todo all type style, such as h1...6, text... */
+/* need decide font */
+h1 {
+  font-size: var(--font-size-20);
+}
+
+h2 {
+  font-size: var(--font-size-16);
+}
+
+h3 {
+  font-size: var(--font-size-14);
+}
+
+h4 {
+  font-size: var(--font-size-11);
+}
+
+h5 {
+  font-size: var(--font-size-9);
+}
+
+h6 {
+  font-size: var(--font-size-7);
+}

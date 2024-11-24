@@ -8,6 +8,6 @@
 
 .main {
   display: flex;
-  flex-direction: column;
-  gap: 32px;
+  gap: var(--space-6);
+  max-width: 1280px;
 }

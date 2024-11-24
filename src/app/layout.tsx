@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 
 import CONSTANCE from "@/helper/constants"
 
-import "./globals.css"
+import "./globals/globals.css"
 
 const { description, title } = CONSTANCE.homepage
 
