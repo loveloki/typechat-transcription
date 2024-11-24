@@ -7,23 +7,27 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "new-component": "npx new-component -l ts",
     "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/themes": "^3.1.6",
+    "dayjs": "^1.11.13",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
+    "@eslint/js": "^9.15.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
+    "eslint": "^9.15.0",
     "eslint-config-next": "15.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "prettier": "3.3.3",
-    "typescript": "^5"
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.15.0"
   }
 }
