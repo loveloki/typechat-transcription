@@ -1,0 +1,8 @@
+.controls {
+  outline: 1px solid;
+}
+
+.section {
+  max-height: 400px;
+  overflow: scroll;
+}
