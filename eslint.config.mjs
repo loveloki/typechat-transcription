@@ -55,6 +55,7 @@ const customConfig = {
         ignoreRestSiblings: true,
       },
     ],
+    "prefer-template": "error",
   },
 }
 
