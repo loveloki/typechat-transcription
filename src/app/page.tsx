@@ -1,3 +1,5 @@
+import PodcastPlayer from "@/components/PodcastPlayer"
+
 import styles from "./page.module.css"
 import TypeChatInfo from "./TypeChatInfo"
 
@@ -6,16 +8,8 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <TypeChatInfo />
-        <PodcastPlayer />
+        <PodcastPlayer episodeNumber={243} />
       </main>
     </div>
-  )
-}
-
-function PodcastPlayer() {
-  return (
-    <section>
-      <p> TODO: Player</p>
-    </section>
   )
 }
