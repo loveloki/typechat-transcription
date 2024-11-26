@@ -1,0 +1,8 @@
+.captions {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+.highlight {
+  background: var(--accent-indicator);
+}

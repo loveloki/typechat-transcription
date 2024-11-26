@@ -8,5 +8,6 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "errorLens.onSave": true
+  "errorLens.onSave": true,
+  "cSpell.words": ["typechat"]
 }
