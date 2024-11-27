@@ -1,6 +1,7 @@
 @import "./colors.css";
 @import "./space.css";
 @import "./font-size.css";
+@import "./shadows.css";
 
 html,
 body {

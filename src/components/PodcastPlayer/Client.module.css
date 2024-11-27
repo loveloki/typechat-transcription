@@ -1,8 +1,32 @@
+.captions-box {
+  position: relative;
+}
+
 .captions {
   max-height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .highlight {
   background: var(--accent-indicator);
+}
+
+.re-scroll {
+  position: absolute;
+  right: var(--space-7);
+  bottom: var(--space-3);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-background);
+  color: var(--accent-contrast);
+  transition: all 0.3s ease-in-out;
+  box-shadow: var(--shadow-5);
 }
