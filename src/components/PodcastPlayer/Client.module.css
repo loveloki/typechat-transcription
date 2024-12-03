@@ -45,9 +45,12 @@
   align-items: center;
   border-radius: var(--radius-4);
   padding: var(--space-3);
+  border: 0;
+  background: inherit;
 }
 
-.control-button:active {
+.control-button:active,
+.control-button:focus-visible {
   background: var(--gray-3);
   scale: 0.9;
 }

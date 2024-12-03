@@ -141,36 +141,36 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
       </div>
 
       <div className={styles.controls}>
-        <div
+        <button
           className={styles["control-button"]}
           onClick={() => handleUpdateCurrentTime(-10)}
         >
           <IconRewindBackward10 size={32} />
-        </div>
+        </button>
         {isPlaying ? (
-          <div
+          <button
             className={styles["control-button"]}
             key="play-button"
             onClick={handlePlaying}
           >
             <Pause size={32} />
-          </div>
+          </button>
         ) : (
-          <div
+          <button
             className={styles["control-button"]}
             key="play-button"
             onClick={handlePlaying}
           >
             <Play size={32} />
-          </div>
+          </button>
         )}
 
-        <div
+        <button
           className={styles["control-button"]}
           onClick={() => handleUpdateCurrentTime(30)}
         >
           <IconRewindForward30 size={32} />
-        </div>
+        </button>
       </div>
       <audio
         onTimeUpdate={handleTimeUpdate}
