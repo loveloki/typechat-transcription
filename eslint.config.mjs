@@ -18,6 +18,7 @@ const ignoreConfig = {
 
 const customConfig = {
   rules: {
+    "import/no-duplicates": ["error"],
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/consistent-type-exports": "error",
     "@typescript-eslint/method-signature-style": "error",
