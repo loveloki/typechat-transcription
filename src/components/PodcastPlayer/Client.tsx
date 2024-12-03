@@ -4,6 +4,7 @@ import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
 import { IconRewindBackward10, IconRewindForward30 } from "@tabler/icons-react"
 import { Pause, Play, Undo2 } from "lucide-react"
+import Image from "next/image"
 import React, { useEffect, useRef, useState } from "react"
 
 import styles from "./Client.module.css"
@@ -141,6 +142,14 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
       </div>
 
       <div className={styles.controls}>
+        <Image
+          alt="243"
+          className={styles.poster}
+          height={48}
+          loader={({ src }) => src}
+          src="https://www.thetype.com/wp-content/uploads/2024/11/TypeChat243-sq.jpg"
+          width={48}
+        />
         <button
           className={styles["control-button"]}
           onClick={() => handleUpdateCurrentTime(-10)}

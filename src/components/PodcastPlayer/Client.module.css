@@ -35,7 +35,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-3);
+  /* gap: var(--space-3); */
   height: 64px;
 }
 
@@ -53,4 +53,8 @@
 .control-button:focus-visible {
   background: var(--gray-3);
   scale: 0.9;
+}
+
+.poster {
+  border-radius: var(--radius-4);
 }
