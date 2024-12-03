@@ -3,9 +3,7 @@
 import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
 import { IconRewindBackward10, IconRewindForward30 } from "@tabler/icons-react"
-import { Undo2 } from "lucide-react"
-import { Pause, Play } from "lucide-react"
-import { motion } from "motion/react"
+import { Pause, Play, Undo2 } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react"
 
 import styles from "./Client.module.css"
@@ -15,13 +13,6 @@ type Props = React.PropsWithChildren<{
   episodeNumber: number
   srtContent: Entry[]
 }>
-
-// todo fix type
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const MotionPause = motion.create(Pause)
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const MotionPlay = motion.create(Play)
 
 function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   // todo use dichotomy
@@ -68,6 +59,16 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
    */
   function handlePlaying() {
     setIsPlaying((currentPlaying) => !currentPlaying)
+  }
+
+  function handleUpdateCurrentTime(step: number) {
+    const audioDom = audioRef.current
+
+    if (!audioDom) {
+      return
+    }
+
+    audioDom.currentTime += step
   }
 
   // when isPlaying change
@@ -140,24 +141,36 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
       </div>
 
       <div className={styles.controls}>
-        <IconRewindBackward10 size={32} />
+        <div
+          className={styles["control-button"]}
+          onClick={() => handleUpdateCurrentTime(-10)}
+        >
+          <IconRewindBackward10 size={32} />
+        </div>
         {isPlaying ? (
-          <MotionPause
+          <div
+            className={styles["control-button"]}
             key="play-button"
             onClick={handlePlaying}
-            size={32}
-            whileTap={{ background: "var(--color-surface)", scale: 0.9 }}
-          />
+          >
+            <Pause size={32} />
+          </div>
         ) : (
-          <MotionPlay
+          <div
+            className={styles["control-button"]}
             key="play-button"
             onClick={handlePlaying}
-            size={32}
-            whileTap={{ background: "var(--color-surface)", scale: 0.9 }}
-          />
+          >
+            <Play size={32} />
+          </div>
         )}
 
-        <IconRewindForward30 size={32} />
+        <div
+          className={styles["control-button"]}
+          onClick={() => handleUpdateCurrentTime(30)}
+        >
+          <IconRewindForward30 size={32} />
+        </div>
       </div>
       <audio
         onTimeUpdate={handleTimeUpdate}

@@ -35,6 +35,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--space-1);
-  height: 48px;
+  gap: var(--space-3);
+  height: 64px;
+}
+
+.control-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-4);
+  padding: var(--space-3);
+}
+
+.control-button:active {
+  background: var(--gray-3);
+  scale: 0.9;
 }

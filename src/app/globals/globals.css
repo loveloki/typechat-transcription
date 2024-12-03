@@ -2,6 +2,7 @@
 @import "./space.css";
 @import "./font-size.css";
 @import "./shadows.css";
+@import "./radius.css";
 
 html,
 body {
