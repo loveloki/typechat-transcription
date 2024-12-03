@@ -30,3 +30,11 @@
   transition: all 0.3s ease-in-out;
   box-shadow: var(--shadow-5);
 }
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-1);
+  height: 48px;
+}

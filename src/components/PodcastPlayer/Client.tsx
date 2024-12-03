@@ -2,8 +2,10 @@
 
 import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
+import { IconRewindBackward10, IconRewindForward30 } from "@tabler/icons-react"
 import { Undo2 } from "lucide-react"
-// import { Pause, Play } from "lucide-react"
+import { Pause, Play } from "lucide-react"
+import { motion } from "motion/react"
 import React, { useEffect, useRef, useState } from "react"
 
 import styles from "./Client.module.css"
@@ -13,6 +15,13 @@ type Props = React.PropsWithChildren<{
   episodeNumber: number
   srtContent: Entry[]
 }>
+
+// todo fix type
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const MotionPause = motion.create(Pause)
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const MotionPlay = motion.create(Play)
 
 function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   // todo use dichotomy
@@ -26,8 +35,10 @@ function getCurrentLine(nowTime: number, srtContent: Entry[]) {
 function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
   const audioSrc = `/audio/typechat${episodeNumber}.mp3`
   const [currentLine, setCurrentLine] = useState<Entry>()
+  const [isPlaying, setIsPlaying] = useState(false)
   const podcastPlayerBox = useRef<HTMLOListElement>(null)
   const { doScrolling, isScrolling, setIsScrolling } = useIsScrolling()
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   function handleTimeUpdate(e: React.SyntheticEvent<HTMLAudioElement>) {
     const audioDom = e.target as HTMLAudioElement
@@ -51,6 +62,33 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
   function handleScroll() {
     doScrolling()
   }
+
+  /**
+   * toggle playing
+   */
+  function handlePlaying() {
+    setIsPlaying((currentPlaying) => !currentPlaying)
+  }
+
+  // when isPlaying change
+  useEffect(() => {
+    const audioDom = audioRef.current
+
+    if (!audioDom) {
+      return
+    }
+
+    try {
+      if (isPlaying) {
+        void audioDom.play()
+      } else {
+        audioDom.pause()
+      }
+    } catch (error) {
+      audioDom.pause()
+      console.log("pause playing podcast, error: ", error)
+    }
+  }, [isPlaying])
 
   // scroll caption in to center
   useEffect(() => {
@@ -101,11 +139,31 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
         </div>
       </div>
 
-      <div className="controls">
-        {/* <Play />
-        <Pause /> */}
+      <div className={styles.controls}>
+        <IconRewindBackward10 size={32} />
+        {isPlaying ? (
+          <MotionPause
+            key="play-button"
+            onClick={handlePlaying}
+            size={32}
+            whileTap={{ background: "var(--color-surface)", scale: 0.9 }}
+          />
+        ) : (
+          <MotionPlay
+            key="play-button"
+            onClick={handlePlaying}
+            size={32}
+            whileTap={{ background: "var(--color-surface)", scale: 0.9 }}
+          />
+        )}
+
+        <IconRewindForward30 size={32} />
       </div>
-      <audio controls onTimeUpdate={handleTimeUpdate} src={audioSrc}></audio>
+      <audio
+        onTimeUpdate={handleTimeUpdate}
+        ref={audioRef}
+        src={audioSrc}
+      ></audio>
     </div>
   )
 }
