@@ -1,5 +1,6 @@
 "use client"
 
+import type { Item } from "@/types/podcast"
 import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
 import { IconRewindBackward10, IconRewindForward30 } from "@tabler/icons-react"
@@ -11,7 +12,7 @@ import styles from "./Client.module.css"
 import useIsScrolling from "./useIsScrolling"
 
 type Props = React.PropsWithChildren<{
-  episodeNumber: number
+  episodeInfo: Item
   srtContent: Entry[]
 }>
 
@@ -24,13 +25,16 @@ function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   return line
 }
 
-function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
-  const audioSrc = `/audio/typechat${episodeNumber}.mp3`
+function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   const [currentLine, setCurrentLine] = useState<Entry>()
   const [isPlaying, setIsPlaying] = useState(false)
   const podcastPlayerBox = useRef<HTMLOListElement>(null)
   const { doScrolling, isScrolling, setIsScrolling } = useIsScrolling()
   const audioRef = useRef<HTMLAudioElement>(null)
+
+  useEffect(() => {
+    console.log("episodeInfo", episodeInfo)
+  }, [episodeInfo])
 
   function handleTimeUpdate(e: React.SyntheticEvent<HTMLAudioElement>) {
     const audioDom = e.target as HTMLAudioElement
@@ -146,8 +150,8 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
           alt="243"
           className={styles.poster}
           height={48}
-          loader={({ src }) => src}
-          src="https://www.thetype.com/wp-content/uploads/2024/11/TypeChat243-sq.jpg"
+          src={episodeInfo["itunes:image"]["@_href"]}
+          unoptimized
           width={48}
         />
         <button
@@ -184,7 +188,7 @@ function PodcastClientPlayer({ episodeNumber, srtContent }: Props) {
       <audio
         onTimeUpdate={handleTimeUpdate}
         ref={audioRef}
-        src={audioSrc}
+        src={episodeInfo.guid}
       ></audio>
     </div>
   )
