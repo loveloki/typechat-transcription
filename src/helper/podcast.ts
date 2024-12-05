@@ -16,9 +16,9 @@ const podcastRSSFilePath = "public/typechat.xml"
 export const getEpisode = cache(async function getEpisode(
   episodeNumber: number,
 ) {
-  const typechatXML = await getRSS()
+  const typechatRSS = await getRSS()
 
-  const { item } = typechatXML.rss.channel
+  const { item } = typechatRSS.channel
 
   return item.find((p) => p.title.split("：")[0] === `#${episodeNumber}`)
 })
@@ -27,5 +27,5 @@ export const getRSS = cache(async function getRSS() {
   const file = await readFile(podcastRSSFilePath)
   const jsonObj = parser.parse(file) as TypechatPodcast
 
-  return jsonObj
+  return jsonObj.rss
 })

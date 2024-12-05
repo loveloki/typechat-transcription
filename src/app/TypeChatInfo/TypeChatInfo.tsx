@@ -1,21 +1,31 @@
 import Link from "@/components/Link"
 import CONSTANCE from "@/helper/constants"
+import { getRSS } from "@/helper/podcast"
 import dayjs from "dayjs"
 import Image from "next/image"
 
-import TypeChatImg from "./TypeChat-iTunesCoverArt-v1.0.0.jpg"
 import styles from "./TypeChatInfo.module.css"
 
-function TypeChatInfo() {
+async function TypeChatInfo() {
   const year = dayjs().diff("2015-09", "year")
   const { text, url } = CONSTANCE.typeChat
 
+  const typeChatRSS = await getRSS()
+  const typechatImg = typeChatRSS.channel["itunes:image"]["@_href"]
+
   return (
     <aside className={styles.box}>
-      <Image alt={text} className={styles.image} src={TypeChatImg} />
+      <Image
+        alt={text}
+        className={styles.image}
+        height={100}
+        src={typechatImg}
+        unoptimized
+        width={100}
+      />
       <header className={styles.title}>
         <Link href={url} target="_blank">
-          字谈字畅
+          {typeChatRSS.channel.title}
         </Link>
       </header>
       <p>
