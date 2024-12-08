@@ -57,6 +57,15 @@ function getChapter(meta: Mp3Meta): Chapter[] {
   })
 }
 
+function getCurrentChapter(
+  nowTime: number,
+  chapters: Chapter[],
+): Chapter | undefined {
+  return chapters.find(
+    ({ endTime, startTime }) => startTime <= nowTime && endTime >= nowTime,
+  )
+}
+
 function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   // todo use dichotomy
   const line = srtContent.find(
@@ -68,7 +77,8 @@ function getCurrentLine(nowTime: number, srtContent: Entry[]) {
 
 function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   const [currentLine, setCurrentLine] = useState<Entry>()
-  const [chapter, setChapter] = useState<Chapter[]>([])
+  const [currentChapter, setCurrentChapter] = useState<Chapter>()
+  const [chapters, setChapters] = useState<Chapter[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const podcastPlayerBox = useRef<HTMLOListElement>(null)
   const { doScrolling, isScrolling, setIsScrolling } = useIsScrolling()
@@ -79,8 +89,8 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   }, [episodeInfo])
 
   useEffect(() => {
-    console.log("chapter", chapter)
-  }, [chapter])
+    console.log("chapter", chapters)
+  }, [chapters])
 
   function handleMetaData() {
     const url = "http://localhost:3000/audio/typechat243.mp3"
@@ -92,7 +102,7 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
       onSuccess: function (tag) {
         const chap = getChapter(tag as unknown as Mp3Meta)
 
-        setChapter(chap)
+        setChapters(chap)
       },
     })
   }
@@ -102,8 +112,10 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
 
     const nowTime = audioDom.currentTime * 1000 // use millisecond
     const newLine = getCurrentLine(nowTime, srtContent)
+    const newChapter = getCurrentChapter(nowTime, chapters)
 
     setCurrentLine(newLine)
+    setCurrentChapter(newChapter)
   }
 
   /**
@@ -182,7 +194,7 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   return (
     <div>
       <div className="chap-list">
-        {chapter.map(({ id, image, title }) => (
+        {chapters.map(({ id, image, title }) => (
           <Image alt={title} height={100} key={id} src={image} width={100} />
         ))}
       </div>
@@ -216,7 +228,11 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
           alt="243"
           className={styles.poster}
           height={48}
-          src={episodeInfo["itunes:image"]["@_href"]}
+          src={
+            currentChapter
+              ? currentChapter.image
+              : episodeInfo["itunes:image"]["@_href"]
+          }
           unoptimized
           width={48}
         />
