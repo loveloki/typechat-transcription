@@ -6,19 +6,13 @@ import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
 import { IconRewindBackward10, IconRewindForward30 } from "@tabler/icons-react"
 import { Pause, Play, Undo2 } from "lucide-react"
-import Image from "next/image"
 import React, { useEffect, useRef, useState } from "react"
 
+import type { Chapter } from "./ChapterList"
+
+import ChapterList from "./ChapterList"
 import styles from "./Client.module.css"
 import useIsScrolling from "./useIsScrolling"
-
-interface Chapter {
-  endTime: number
-  id: string
-  image: string
-  startTime: number
-  title: string
-}
 
 type Props = React.PropsWithChildren<{
   episodeInfo: Item
@@ -57,15 +51,6 @@ function getChapter(meta: Mp3Meta): Chapter[] {
   })
 }
 
-function getCurrentChapter(
-  nowTime: number,
-  chapters: Chapter[],
-): Chapter | undefined {
-  return chapters.find(
-    ({ endTime, startTime }) => startTime <= nowTime && endTime >= nowTime,
-  )
-}
-
 function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   // todo use dichotomy
   const line = srtContent.find(
@@ -77,7 +62,7 @@ function getCurrentLine(nowTime: number, srtContent: Entry[]) {
 
 function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   const [currentLine, setCurrentLine] = useState<Entry>()
-  const [currentChapter, setCurrentChapter] = useState<Chapter>()
+  const [currentTime, setCurrentTime] = useState(0)
   const [chapters, setChapters] = useState<Chapter[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const podcastPlayerBox = useRef<HTMLOListElement>(null)
@@ -110,12 +95,11 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   function handleTimeUpdate(e: React.SyntheticEvent<HTMLAudioElement>) {
     const audioDom = e.target as HTMLAudioElement
 
-    const nowTime = audioDom.currentTime * 1000 // use millisecond
-    const newLine = getCurrentLine(nowTime, srtContent)
-    const newChapter = getCurrentChapter(nowTime, chapters)
+    const currentTime = audioDom.currentTime * 1000 // use millisecond
+    const newLine = getCurrentLine(currentTime, srtContent)
 
     setCurrentLine(newLine)
-    setCurrentChapter(newChapter)
+    setCurrentTime(currentTime)
   }
 
   /**
@@ -193,11 +177,6 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
 
   return (
     <div>
-      <div className="chap-list">
-        {chapters.map(({ id, image, title }) => (
-          <Image alt={title} height={100} key={id} src={image} width={100} />
-        ))}
-      </div>
       <div className={styles["captions-box"]}>
         <ol
           className={styles.captions}
@@ -224,17 +203,10 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
       </div>
 
       <div className={styles.controls}>
-        <Image
-          alt="243"
-          className={styles.poster}
-          height={48}
-          src={
-            currentChapter
-              ? currentChapter.image
-              : episodeInfo["itunes:image"]["@_href"]
-          }
-          unoptimized
-          width={48}
+        <ChapterList
+          chapters={chapters}
+          currentTime={currentTime}
+          defaultPosterImg={episodeInfo["itunes:image"]["@_href"]}
         />
         <button
           className={styles["control-button"]}
