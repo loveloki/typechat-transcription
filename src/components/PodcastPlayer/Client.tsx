@@ -1,5 +1,6 @@
 "use client"
 
+import type { Mp3Meta } from "@/types/mp3meta"
 import type { Item } from "@/types/podcast"
 import type { Entry } from "@plussub/srt-vtt-parser/dist/types"
 
@@ -11,10 +12,50 @@ import React, { useEffect, useRef, useState } from "react"
 import styles from "./Client.module.css"
 import useIsScrolling from "./useIsScrolling"
 
+interface Chapter {
+  endTime: number
+  id: string
+  image: string
+  startTime: number
+  title: string
+}
+
 type Props = React.PropsWithChildren<{
   episodeInfo: Item
   srtContent: Entry[]
 }>
+
+function arrayBufferToBase64(buffer: number[]) {
+  let binary = ""
+  const bytes = new Uint8Array(buffer)
+  const len = bytes.byteLength
+
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i])
+  }
+
+  return window.btoa(binary)
+}
+
+function getChapter(meta: Mp3Meta): Chapter[] {
+  const { CHAP } = meta.tags
+
+  return CHAP.map((chap) => {
+    const { endTime, id, startTime, subFrames } = chap.data
+    const { APIC, TIT2 } = subFrames
+
+    const image = APIC.data.data
+    const title = TIT2.data
+
+    return {
+      endTime,
+      id,
+      image: `data:image/jpeg;base64,${arrayBufferToBase64(image)}`,
+      startTime,
+      title,
+    }
+  })
+}
 
 function getCurrentLine(nowTime: number, srtContent: Entry[]) {
   // todo use dichotomy
@@ -27,6 +68,7 @@ function getCurrentLine(nowTime: number, srtContent: Entry[]) {
 
 function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   const [currentLine, setCurrentLine] = useState<Entry>()
+  const [chapter, setChapter] = useState<Chapter[]>([])
   const [isPlaying, setIsPlaying] = useState(false)
   const podcastPlayerBox = useRef<HTMLOListElement>(null)
   const { doScrolling, isScrolling, setIsScrolling } = useIsScrolling()
@@ -35,6 +77,25 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
   useEffect(() => {
     console.log("episodeInfo", episodeInfo)
   }, [episodeInfo])
+
+  useEffect(() => {
+    console.log("chapter", chapter)
+  }, [chapter])
+
+  function handleMetaData() {
+    const url = "http://localhost:3000/audio/typechat243.mp3"
+
+    globalThis.jsmediatags.read(url, {
+      onError: function (error: unknown) {
+        console.log(error)
+      },
+      onSuccess: function (tag) {
+        const chap = getChapter(tag as unknown as Mp3Meta)
+
+        setChapter(chap)
+      },
+    })
+  }
 
   function handleTimeUpdate(e: React.SyntheticEvent<HTMLAudioElement>) {
     const audioDom = e.target as HTMLAudioElement
@@ -120,6 +181,11 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
 
   return (
     <div>
+      <div className="chap-list">
+        {chapter.map(({ id, image, title }) => (
+          <Image alt={title} height={100} key={id} src={image} width={100} />
+        ))}
+      </div>
       <div className={styles["captions-box"]}>
         <ol
           className={styles.captions}
@@ -186,6 +252,7 @@ function PodcastClientPlayer({ episodeInfo, srtContent }: Props) {
         </button>
       </div>
       <audio
+        onLoadedMetadata={handleMetaData}
         onTimeUpdate={handleTimeUpdate}
         ref={audioRef}
         src={episodeInfo.guid}
