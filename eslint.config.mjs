@@ -57,6 +57,7 @@ const customConfig = {
       },
     ],
     "prefer-template": "error",
+    "react/display-name": "off",
   },
 }
 
